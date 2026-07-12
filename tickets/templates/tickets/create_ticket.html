@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Ticket{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">Create Ticket</h2>
+
+<div class="card shadow-sm">
+
+    <div class="card-body">
+
+        <form method="post">
+
+            {% csrf_token %}
+
+            <form method="post" enctype="multipart/form-data">
+
+                {% csrf_token %}
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+
+                        Title
+
+                    </label>
+
+                    {{ form.title }}
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+
+                        Description
+
+                    </label>
+
+                    {{ form.description }}
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+
+                            Category
+
+                        </label>
+
+                        {{ form.category }}
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+
+                            Priority
+
+                        </label>
+
+                        {{ form.priority }}
+
+                    </div>
+
+                </div>
+
+                <br>
+
+                <button class="btn btn-primary">
+
+                    Create Ticket
+
+                </button>
+
+            </form>
+
+            <button class="btn btn-primary">
+                Submit Ticket
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}
