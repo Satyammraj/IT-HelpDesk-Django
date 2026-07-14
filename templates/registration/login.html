@@ -18,7 +18,9 @@
     <!-- Typography: matches base.html's "Panel" theme -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
 
     <link rel="stylesheet" href="{% static 'tickets/css/style.css' %}">
 
@@ -118,7 +120,8 @@
             transition: all 0.15s ease;
         }
 
-        .btn-danger:hover, .btn-danger:focus {
+        .btn-danger:hover,
+        .btn-danger:focus {
             background: var(--paper) !important;
             border-color: var(--ink-faint) !important;
         }
@@ -188,7 +191,8 @@
             border-radius: var(--radius-sm);
         }
 
-        .btn-primary:hover, .btn-primary:focus {
+        .btn-primary:hover,
+        .btn-primary:focus {
             background: var(--indigo-hover);
             border-color: var(--indigo-hover);
         }
@@ -223,7 +227,9 @@
         }
 
         @media (max-width: 576px) {
-            .card-body.p-5 { padding: 2rem 1.5rem !important; }
+            .card-body.p-5 {
+                padding: 2rem 1.5rem !important;
+            }
         }
     </style>
 
@@ -259,107 +265,111 @@
 
                         </p>
 
-                        <!----> Google Login -->
-                        
-                        
-                        
+                        <!----> Google Login <---->
 
-                        <div class="text-center text-muted mb-3">
+                            {% load socialaccount %}
 
-                            OR
+                            <a href="{% provider_login_url 'google' %}" class="btn btn-danger w-100 mb-3">
+                                <i class="bi bi-google"></i>
+                                Continue with Google
+                            </a>
 
-                        </div>
+                            <div class="text-center text-muted mb-3">
 
-                        {% if messages %}
-
-                        {% for message in messages %}
-
-                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
-
-                            {{ message }}
-
-                            <button type="button" class="btn-close" data-bs-dismiss="alert">
-                            </button>
-
-                        </div>
-
-                        {% endfor %}
-
-                        {% endif %}
-
-                        {% if form.errors %}
-
-                        <div class="alert alert-danger">
-
-                            Invalid username or password.
-
-                        </div>
-
-                        {% endif %}
-
-                        <form method="post">
-
-                            {% csrf_token %}
-
-                            <div class="mb-3">
-
-                                <label class="form-label">
-
-                                    Username
-
-                                </label>
-
-                                <input type="text" name="username" class="form-control" required>
+                                OR
 
                             </div>
 
-                            <div class="mb-4">
+                            {% if messages %}
 
-                                <label class="form-label">
+                            {% for message in messages %}
 
-                                    Password
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
 
-                                </label>
+                                {{ message }}
 
-                                <input type="password" name="password" class="form-control" required>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert">
+                                </button>
 
                             </div>
 
-                            <button type="submit" class="btn btn-primary w-100">
+                            {% endfor %}
 
-                                Login
+                            {% endif %}
 
-                            </button>
+                            {% if form.errors %}
 
-                            <div class="text-center mt-3">
+                            <div class="alert alert-danger">
 
-                                <a href="{% url 'password_reset' %}">
+                                Invalid username or password.
 
-                                    Forgot your password?
+                            </div>
+
+                            {% endif %}
+
+                            <form method="post">
+
+                                {% csrf_token %}
+
+                                <div class="mb-3">
+
+                                    <label class="form-label">
+
+                                        Username
+
+                                    </label>
+
+                                    <input type="text" name="username" class="form-control" required>
+
+                                </div>
+
+                                <div class="mb-4">
+
+                                    <label class="form-label">
+
+                                        Password
+
+                                    </label>
+
+                                    <input type="password" name="password" class="form-control" required>
+
+                                </div>
+
+                                <button type="submit" class="btn btn-primary w-100">
+
+                                    Login
+
+                                </button>
+
+                                <div class="text-center mt-3">
+
+                                    <a href="{% url 'password_reset' %}">
+
+                                        Forgot your password?
+
+                                    </a>
+
+                                </div>
+
+                            </form>
+
+                            <hr>
+
+                            <p class="text-center">
+
+                                Don't have an account?
+
+                            </p>
+
+                            <div class="text-center">
+
+                                <a href="{% url 'register' %}" class="btn btn-outline-primary">
+
+                                    Create Account
 
                                 </a>
 
                             </div>
-
-                        </form>
-
-                        <hr>
-
-                        <p class="text-center">
-
-                            Don't have an account?
-
-                        </p>
-
-                        <div class="text-center">
-
-                            <a href="{% url 'register' %}" class="btn btn-outline-primary">
-
-                                Create Account
-
-                            </a>
-
-                        </div>
 
                     </div>
 
