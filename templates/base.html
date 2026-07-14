@@ -13,11 +13,605 @@
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
+    <!-- Typography: clean, modern, rounded — app-native feel -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'tickets/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'tickets/css/profile.css' %}">
+
+    <style>
+        /* ============================================================
+           "Panel" theme — a modern, app-like light workspace in the
+           spirit of Discord's light mode: white surfaces, a soft gray
+           page bed, rounded pill navigation, one confident indigo
+           accent. Clean and professional, not corporate-stiff.
+        ============================================================ */
+        :root {
+            --indigo: #2563EB;
+            --indigo-hover: #1D4ED8;
+            --indigo-soft: #EFF6FF;
+
+            --ink: #0F172A;
+            --ink-soft: #334155;
+            --ink-faint: #64748B;
+
+            --paper: #E4EAF2;
+            --card: #FFFFFF;
+            --border: #D3DCE6;
+
+            --sidebar-bg: #EEF2F8;
+
+            --success: #16A34A;
+            --success-bg: #DCFCE7;
+            --danger: #DA373C;
+            --danger-bg: #FDECEC;
+            --warning: #C4841A;
+            --warning-bg: #FBF3E2;
+            --info: #2563EB;
+            --info-bg: #EFF6FF;
+
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow-sm: 0 1px 2px rgba(24, 25, 28, 0.05);
+            --shadow-md: 0 4px 16px rgba(24, 25, 28, 0.08);
+        }
+
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: var(--paper);
+            color: var(--ink);
+            min-height: 100vh;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        .navbar.bg-primary {
+            background: var(--card) !important;
+            border-bottom: 1px solid var(--border);
+            box-shadow: none;
+            padding-top: 0.7rem;
+            padding-bottom: 0.7rem;
+        }
+
+        .navbar-brand {
+            font-family: 'Manrope', sans-serif;
+            font-weight: 800;
+            font-size: 1.25rem;
+            color: var(--ink) !important;
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+            letter-spacing: -0.01em;
+        }
+
+        .navbar-brand i {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 34px;
+            height: 34px;
+            border-radius: var(--radius-md);
+            background: var(--indigo);
+            color: #fff;
+            font-size: 1rem;
+            font-style: normal;
+        }
+
+        .navbar .fw-bold.text-white {
+            color: var(--ink) !important;
+            font-weight: 600;
+            font-size: 0.92rem;
+        }
+
+        .navbar .text-white-50 {
+            color: var(--ink-faint) !important;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .navbar .badge.bg-danger {
+            background: var(--danger-bg) !important;
+            color: var(--danger) !important;
+            font-weight: 700;
+            font-size: 0.62rem;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            padding: 0.32em 0.6em;
+            border-radius: 20px;
+        }
+
+        .navbar .badge.bg-primary {
+            background: var(--indigo-soft) !important;
+            color: var(--indigo) !important;
+            font-weight: 700;
+            font-size: 0.62rem;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            padding: 0.32em 0.6em;
+            border-radius: 20px;
+        }
+
+        .navbar img.rounded-circle {
+            width: 32px;
+            height: 32px;
+            object-fit: cover;
+            border: 2px solid var(--card);
+            outline: 2px solid var(--border);
+            transition: outline-color 0.18s ease;
+        }
+
+        .navbar img.rounded-circle:hover {
+            outline-color: var(--indigo);
+        }
+
+        /* ================= SIDEBAR ================= */
+
+        .col-md-2.bg-dark {
+            background: var(--sidebar-bg) !important;
+            border-right: 1px solid var(--border);
+            box-shadow: none;
+            padding-top: 1.25rem !important;
+        }
+
+        .col-md-2.bg-dark hr {
+            border-color: var(--border);
+            margin: 1rem 0 1.15rem;
+        }
+
+        .col-md-2 .nav-link {
+            display: flex;
+            align-items: center;
+            border-radius: var(--radius-md);
+            padding: 0.6rem 0.85rem;
+            margin-bottom: 0.3rem !important;
+            color: var(--ink-soft) !important;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.15s ease;
+        }
+
+        .col-md-2 .nav-link i {
+            color: var(--ink-faint);
+            width: 20px;
+            transition: color 0.15s ease;
+        }
+
+        .col-md-2 .nav-link:hover {
+            background: var(--indigo-soft);
+            color: var(--indigo) !important;
+        }
+
+        .col-md-2 .nav-link:hover i {
+            color: var(--indigo);
+        }
+
+        .col-md-2 .nav-link.text-danger {
+            color: var(--danger) !important;
+            margin-top: 0.6rem;
+        }
+
+        .col-md-2 .nav-link.text-danger i {
+            color: var(--danger);
+        }
+
+        .col-md-2 .nav-link.text-danger:hover {
+            background: var(--danger-bg);
+            color: var(--danger) !important;
+        }
+
+        /* ================= MAIN / CONTENT ================= */
+
+        .col-md-10.p-4 {
+            padding: 2rem 2.25rem !important;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Manrope', sans-serif;
+            color: var(--ink);
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+
+        /* Alerts — rounded, flat-toned notification chips */
+        .alert {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            color: var(--ink);
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 0.85rem 1.1rem;
+        }
+
+        .alert-success { background: var(--success-bg); border-color: transparent; color: #1E7A48; }
+        .alert-danger  { background: var(--danger-bg);  border-color: transparent; color: var(--danger); }
+        .alert-warning { background: var(--warning-bg); border-color: transparent; color: var(--warning); }
+        .alert-info    { background: var(--info-bg);    border-color: transparent; color: var(--indigo); }
+
+        .btn-close {
+            font-size: 0.75rem;
+        }
+
+        /* Buttons — one confident indigo, fully rounded like app CTAs */
+        .btn-primary {
+            background: var(--indigo);
+            border-color: var(--indigo);
+            font-weight: 600;
+            border-radius: var(--radius-sm);
+            padding: 0.5rem 1.1rem;
+        }
+
+        .btn-primary:hover, .btn-primary:focus {
+            background: var(--indigo-hover);
+            border-color: var(--indigo-hover);
+        }
+
+        .btn-outline-primary {
+            color: var(--indigo);
+            border-color: var(--indigo);
+            font-weight: 600;
+            border-radius: var(--radius-sm);
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--indigo);
+            border-color: var(--indigo);
+        }
+
+        .btn-success {
+            background: var(--success);
+            border-color: var(--success);
+            font-weight: 600;
+            border-radius: var(--radius-sm);
+        }
+
+        .btn-success:hover, .btn-success:focus {
+            background: #12833E;
+            border-color: #12833E;
+        }
+
+        .btn-secondary {
+            background: var(--card);
+            border: 1px solid var(--border);
+            color: var(--ink-soft);
+            font-weight: 600;
+            border-radius: var(--radius-sm);
+        }
+
+        .btn-secondary:hover, .btn-secondary:focus {
+            background: var(--paper);
+            border-color: var(--ink-faint);
+            color: var(--ink);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            border-color: var(--danger);
+            font-weight: 600;
+            border-radius: var(--radius-sm);
+        }
+
+        .btn-danger:hover, .btn-danger:focus {
+            background: #A82D26;
+            border-color: #A82D26;
+        }
+
+        .btn-info {
+            background: var(--info);
+            border-color: var(--info);
+            font-weight: 600;
+            border-radius: var(--radius-sm);
+        }
+
+        .btn-info:hover, .btn-info:focus {
+            background: var(--indigo-hover);
+            border-color: var(--indigo-hover);
+            color: #fff;
+        }
+
+        .text-secondary { color: var(--ink-faint) !important; }
+
+        /* Icon-only action buttons in a .btn-group read cleaner as
+           separated rounded buttons rather than a fused pill strip. */
+        .btn-group .btn {
+            border-radius: var(--radius-sm) !important;
+            margin-right: 4px;
+        }
+
+        .btn-group .btn:last-child {
+            margin-right: 0;
+        }
+
+        /* Pagination */
+        .pagination .page-link {
+            color: var(--ink-soft);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            margin: 0 3px;
+            font-weight: 600;
+            font-size: 0.88rem;
+        }
+
+        .pagination .page-link:hover {
+            background: var(--indigo-soft);
+            border-color: var(--indigo-soft);
+            color: var(--indigo);
+        }
+
+        .pagination .page-item.active .page-link {
+            background: var(--indigo);
+            border-color: var(--indigo);
+            color: #fff;
+        }
+
+        .pagination .page-item.disabled .page-link {
+            color: var(--ink-faint);
+            background: var(--paper);
+            border-color: var(--border);
+        }
+
+        /* Bootstrap's contextual text/badge/table utilities — rethemed
+           so stat cards, priority/status badges, and tables match the
+           app palette instead of Bootstrap's stock colors. */
+        .text-primary { color: var(--indigo) !important; }
+        .text-success { color: var(--success) !important; }
+        .text-danger  { color: var(--danger) !important; }
+        .text-warning { color: var(--warning) !important; }
+
+        .badge {
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.68rem;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            padding: 0.4em 0.75em;
+        }
+
+        .badge.bg-primary   { background-color: var(--indigo) !important;  color: #fff !important; }
+        .badge.bg-danger    { background-color: var(--danger) !important; color: #fff !important; }
+        .badge.bg-success   { background-color: var(--success) !important; color: #fff !important; }
+        .badge.bg-warning   { background-color: var(--warning) !important; color: #fff !important; }
+        .badge.bg-secondary { background-color: var(--border) !important; color: var(--ink-soft) !important; }
+        .badge.bg-info      { background-color: var(--info) !important;   color: #fff !important; }
+
+        .border-primary { border-color: var(--indigo) !important; }
+
+        .alert-light {
+            background: var(--paper) !important;
+            border-color: var(--border) !important;
+            color: var(--ink-faint) !important;
+        }
+
+        .table-light, .table > :not(caption) > * > *.table-light {
+            --bs-table-bg: var(--paper);
+            --bs-table-color: var(--ink-faint);
+        }
+
+        .table-hover > tbody > tr:hover > * {
+            --bs-table-accent-bg: var(--indigo-soft);
+        }
+
+        .table td, .table th {
+            border-color: var(--border);
+            vertical-align: middle;
+        }
+
+        /* Stat numbers inside dashboard cards */
+        .card h1, .card h2 {
+            font-size: 1.9rem;
+        }
+
+        .card h6.text-muted, .card h5.text-muted {
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            color: var(--ink-faint) !important;
+        }
+           should use the same royal blue as buttons/links, not
+           Bootstrap's default blue. */
+        .bg-primary {
+            background-color: var(--indigo) !important;
+        }
+
+        .card-header.bg-primary h3,
+        .card-header.bg-primary h4,
+        .card-header.bg-primary h5 {
+            color: #fff;
+        }
+
+        .btn-outline-secondary {
+            color: var(--ink-soft);
+            border-color: var(--border);
+            font-weight: 600;
+            border-radius: var(--radius-sm);
+        }
+
+        .btn-outline-secondary:hover {
+            background: var(--paper);
+            border-color: var(--ink-faint);
+            color: var(--ink);
+        }
+
+        form input[type="file"] {
+            width: 100%;
+            border: 1px dashed var(--border);
+            border-radius: var(--radius-sm);
+            padding: 0.55rem 0.85rem;
+            background: var(--paper);
+            color: var(--ink-soft);
+            font-size: 0.88rem;
+        }
+
+        form input[type="file"]:focus {
+            outline: none;
+            border-color: var(--indigo);
+            box-shadow: 0 0 0 3px var(--indigo-soft);
+        }
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .card-header {
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0 !important;
+            padding: 1.1rem 1.5rem;
+        }
+
+        .card-header h3, .card-header h4, .card-header h5 {
+            font-family: 'Manrope', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--ink);
+            margin-bottom: 0;
+            letter-spacing: -0.01em;
+        }
+
+        .card-body {
+            padding: 1.75rem 1.5rem;
+        }
+
+        /* Bootstrap's own .form-control inputs */
+        .form-control, .form-select {
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 0.6rem 0.85rem;
+            background: var(--paper);
+            color: var(--ink);
+            font-size: 0.9rem;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--indigo);
+            box-shadow: 0 0 0 3px var(--indigo-soft);
+            background: var(--card);
+        }
+
+        .form-label {
+            font-weight: 700;
+            font-size: 0.78rem;
+            color: var(--ink);
+        }
+
+        /* Django's form.as_p renders bare <p><label><input>, with no
+           Bootstrap classes to hook into — style those tags directly
+           so any extending page (register, create ticket, etc.) gets
+           matching inputs without touching template logic. */
+        form p {
+            margin-bottom: 1.1rem;
+        }
+
+        form label {
+            display: block;
+            font-weight: 700;
+            font-size: 0.78rem;
+            color: var(--ink);
+            margin-bottom: 0.4rem;
+        }
+
+        form input[type="text"],
+        form input[type="password"],
+        form input[type="email"],
+        form input[type="number"],
+        form input[type="date"],
+        form select,
+        form textarea {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 0.6rem 0.85rem;
+            background: var(--paper);
+            color: var(--ink);
+            font-size: 0.9rem;
+        }
+
+        form input:focus,
+        form select:focus,
+        form textarea:focus {
+            outline: none;
+            border-color: var(--indigo);
+            box-shadow: 0 0 0 3px var(--indigo-soft);
+            background: var(--card);
+        }
+
+        form .helptext {
+            display: block;
+            font-size: 0.76rem;
+            color: var(--ink-faint);
+            margin-top: 0.35rem;
+        }
+
+        form ul.errorlist {
+            list-style: none;
+            padding: 0.6rem 0.85rem;
+            margin: 0 0 0.6rem;
+            background: var(--danger-bg);
+            color: var(--danger);
+            border-radius: var(--radius-sm);
+            font-size: 0.82rem;
+            font-weight: 500;
+        }
+
+        .table thead {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+        }
+
+        a {
+            color: var(--indigo);
+            font-weight: 500;
+        }
+
+        a:hover {
+            color: var(--indigo-hover);
+        }
+
+        /* Scrollbar, quietly */
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: var(--paper); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 6px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--indigo); }
+
+        /* ================= FOOTER ================= */
+
+        footer.text-center {
+            color: var(--ink-faint);
+        }
+
+        footer hr {
+            border-color: var(--border);
+            max-width: 220px;
+            margin: 1.5rem auto 1rem;
+        }
+
+        footer p {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--ink-faint);
+        }
+
+        @media (max-width: 768px) {
+            .col-md-10.p-4 { padding: 1.25rem !important; }
+        }
+    </style>
 </head>
 
-<body>
+<body class="{% if request.user.is_authenticated %}{{ request.user.profile.theme }}{% endif %}">
 
     <!-- ================= NAVBAR ================= -->
 
@@ -40,8 +634,35 @@
 
                     <div class="fw-bold text-white">
 
-                        Welcome,
+                        Welcome back,
+
+                        {% if request.user.get_full_name %}
+
+                        {{ request.user.get_full_name }}
+
+                        {% else %}
+
                         {{ request.user.username }}
+
+                        {% endif %}
+
+                        {% if request.user.is_staff %}
+
+                        <span class="badge bg-danger">
+
+                            Administrator
+
+                        </span>
+
+                        {% else %}
+
+                        <span class="badge bg-primary">
+
+                            User
+
+                        </span>
+
+                        {% endif %}
 
                     </div>
 
@@ -55,8 +676,21 @@
 
                 <a href="{% url 'profile' %}">
 
-                    <img src="https://ui-avatars.com/api/?name={{ request.user.username }}&background=ffffff&color=0d6efd&size=128"
-                        class="rounded-circle border border-white" width="45" height="45" alt="Profile">
+                    {% if request.user.is_authenticated %}
+
+                    {% if request.user.profile.profile_picture %}
+
+                    <img src="{{ request.user.profile.profile_picture.url }}" class="rounded-circle"
+                        style="width:32px;height:32px;object-fit:cover;">
+
+                    {% else %}
+
+                    <img src="https://ui-avatars.com/api/?name={{ request.user.username }}&background=2563EB&color=fff"
+                        class="rounded-circle">
+
+                    {% endif %}
+
+                    {% endif %}
 
                 </a>
 
@@ -65,6 +699,7 @@
         </div>
 
     </nav>
+
 
     <!-- ================= PAGE ================= -->
 
@@ -117,7 +752,22 @@
             <!-- Main -->
 
             <div class="col-md-10 p-4">
+                {% if messages %}
 
+                {% for message in messages %}
+
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+
+                    {{ message }}
+
+                    <button class="btn-close" data-bs-dismiss="alert">
+                    </button>
+
+                </div>
+
+                {% endfor %}
+
+                {% endif %}
                 {% block content %}
                 {% endblock %}
 
@@ -128,6 +778,18 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+    <footer class="text-center mt-5 text-muted">
+
+        <hr>
+
+        <p>
+
+            2026 IT Help Desk — Built with Django &amp; Bootstrap
+
+        </p>
+
+    </footer>
 
 </body>
 

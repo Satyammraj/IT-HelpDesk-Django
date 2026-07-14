@@ -4,114 +4,96 @@
 
 {% block content %}
 
-<h2 class="fw-bold mb-4">
+<style>
+    /* ================= USERS PAGE — Panel theme ================= */
 
-User Management
+    .users-page-title {
+        font-family: 'Manrope', sans-serif;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+    }
 
+    .users-table img.rounded-circle {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border: 2px solid var(--card);
+        outline: 1px solid var(--border);
+    }
+
+    .users-table td {
+        font-size: 0.9rem;
+        color: var(--ink-soft);
+    }
+
+    .users-table .fw-username {
+        font-weight: 600;
+        color: var(--ink);
+    }
+</style>
+
+<h2 class="users-page-title mb-4">
+    User Management
 </h2>
 
-<div class="card shadow-sm">
+<div class="card">
 
     <div class="card-body">
 
-        <table class="table table-hover align-middle">
+        <table class="table table-hover align-middle users-table">
 
             <thead>
-
                 <tr>
-
                     <th>Avatar</th>
                     <th>Username</th>
                     <th>Email</th>
                     <th>Role</th>
                     <th>Joined</th>
                     <th>Action</th>
-
                 </tr>
-
             </thead>
 
             <tbody>
 
                 {% for user in users %}
-
                 <tr>
 
                     <td>
-
                         <img
-                        src="https://ui-avatars.com/api/?name={{ user.username }}&background=0d6efd&color=fff"
-                        class="rounded-circle"
-                        width="40">
-
+                            src="https://ui-avatars.com/api/?name={{ user.username }}&background=2563EB&color=fff"
+                            class="rounded-circle"
+                            width="40">
                     </td>
 
-                    <td>{{ user.username }}</td>
+                    <td class="fw-username">{{ user.username }}</td>
 
                     <td>{{ user.email }}</td>
 
                     <td>
-
                         {% if user.is_staff %}
-
-                        <span class="badge bg-success">
-
-                            Admin
-
-                        </span>
-
+                        <span class="badge bg-success">Admin</span>
                         {% else %}
-
-                        <span class="badge bg-secondary">
-
-                            User
-
-                        </span>
-
+                        <span class="badge bg-secondary">User</span>
                         {% endif %}
-
                     </td>
 
-                    <td>
-
-                        {{ user.date_joined|date:"d M Y" }}
-
-                    </td>
+                    <td>{{ user.date_joined|date:"d M Y" }}</td>
 
                     <td>
-
                         {% if user != request.user %}
-
-                            <a
-                            href="{% url 'toggle_admin' user.id %}"
-                            class="btn btn-sm btn-primary">
-
-                                {% if user.is_staff %}
-
-                                    Remove Admin
-
-                                {% else %}
-
-                                    Make Admin
-
-                                {% endif %}
-
-                            </a>
-
+                        <a href="{% url 'toggle_admin' user.id %}" class="btn btn-sm btn-primary">
+                            {% if user.is_staff %}
+                            <i class="bi bi-person-dash-fill me-1"></i>Remove Admin
+                            {% else %}
+                            <i class="bi bi-person-check-fill me-1"></i>Make Admin
+                            {% endif %}
+                        </a>
                         {% else %}
-
-                            <span class="text-muted">
-
-                                Current User
-
-                            </span>
-
+                        <span class="text-secondary">Current User</span>
                         {% endif %}
-
                     </td>
 
                 </tr>
-
                 {% endfor %}
 
             </tbody>

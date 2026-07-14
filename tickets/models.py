@@ -93,3 +93,30 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.ticket.title}"
+
+class TicketHistory(models.Model):
+
+    ticket = models.ForeignKey(
+        Ticket,
+        on_delete=models.CASCADE,
+        related_name="history",
+    )
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+    )
+
+    action = models.CharField(max_length=100)
+
+    details = models.TextField(blank=True)
+
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+
+        ordering = ["-created"]
+
+    def __str__(self):
+
+        return f"{self.ticket} - {self.action}"

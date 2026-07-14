@@ -4,9 +4,23 @@
 
 {% block content %}
 
-<h2 class="fw-bold mb-4">Dashboard</h2>
+<h2 class="fw-bold mb-4">
 
-<!-- Statistics Cards -->
+    {% if admin %}
+
+        <i class="bi bi-speedometer2"></i>
+        Admin Dashboard
+
+    {% else %}
+
+        <i class="bi bi-house-door"></i>
+        My Dashboard
+
+    {% endif %}
+
+</h2>
+
+<!-- ================= Statistics ================= -->
 
 <div class="row g-4">
 
@@ -18,11 +32,17 @@
 
                 <div>
 
-                    <h6 class="text-muted">Total Tickets</h6>
+                    <h6 class="text-muted">
 
-                    <h2>{{ total_tickets }}</h2>
+                        Total Tickets
 
-                    <small class="text-muted">All Tickets</small>
+                    </h6>
+
+                    <h2>
+
+                        {{ total_tickets }}
+
+                    </h2>
 
                 </div>
 
@@ -42,11 +62,17 @@
 
                 <div>
 
-                    <h6 class="text-muted">Active Tickets</h6>
+                    <h6 class="text-muted">
 
-                    <h2 class="text-warning">{{ active_tickets }}</h2>
+                        Active Tickets
 
-                    <small class="text-muted">Open / In Progress</small>
+                    </h6>
+
+                    <h2 class="text-warning">
+
+                        {{ active_tickets }}
+
+                    </h2>
 
                 </div>
 
@@ -66,11 +92,17 @@
 
                 <div>
 
-                    <h6 class="text-muted">Closed Tickets</h6>
+                    <h6 class="text-muted">
 
-                    <h2 class="text-success">{{ closed_tickets }}</h2>
+                        Closed Tickets
 
-                    <small class="text-muted">Resolved</small>
+                    </h6>
+
+                    <h2 class="text-success">
+
+                        {{ closed_tickets }}
+
+                    </h2>
 
                 </div>
 
@@ -90,11 +122,17 @@
 
                 <div>
 
-                    <h6 class="text-muted">High Priority</h6>
+                    <h6 class="text-muted">
 
-                    <h2 class="text-danger">{{ high_priority }}</h2>
+                        High Priority
 
-                    <small class="text-muted">Urgent</small>
+                    </h6>
+
+                    <h2 class="text-danger">
+
+                        {{ high_priority }}
+
+                    </h2>
 
                 </div>
 
@@ -108,13 +146,163 @@
 
 </div>
 
-<!-- Recent Tickets -->
+<!-- ================= Admin Only ================= -->
+
+{% if admin %}
+
+<div class="row mt-4">
+
+    <div class="col-md-6">
+
+        <div class="card shadow-sm border-0">
+
+            <div class="card-body">
+
+                <h5 class="text-muted">
+
+                    Total Users
+
+                </h5>
+
+                <h1 class="text-primary">
+
+                    {{ total_users }}
+
+                </h1>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-6">
+
+        <div class="card shadow-sm border-0">
+
+            <div class="card-body">
+
+                <h5 class="text-muted">
+
+                    Tickets Created Today
+
+                </h5>
+
+                <h1 class="text-success">
+
+                    {{ today_tickets }}
+
+                </h1>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endif %}
+
+<!-- ================= Recent Users ================= -->
+
+{% if admin %}
+
+<div class="card shadow-sm mt-5">
+
+    <div class="card-header bg-white">
+
+        <h5 class="mb-0">
+
+            <i class="bi bi-people"></i>
+
+            Recent Users
+
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        <table class="table table-hover">
+
+            <thead class="table-light">
+
+                <tr>
+
+                    <th>Username</th>
+
+                    <th>Email</th>
+
+                    <th>Joined</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for user in recent_users %}
+
+                <tr>
+
+                    <td>
+
+                        {{ user.username }}
+
+                    </td>
+
+                    <td>
+
+                        {{ user.email|default:"Not Provided" }}
+
+                    </td>
+
+                    <td>
+
+                        {{ user.date_joined|date:"d M Y" }}
+
+                    </td>
+
+                </tr>
+
+                {% empty %}
+
+                <tr>
+
+                    <td colspan="3" class="text-center">
+
+                        No users found.
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endif %}
+
+<!-- ================= Recent Tickets ================= -->
 
 <div class="card shadow-sm mt-5">
 
     <div class="card-header bg-white d-flex justify-content-between align-items-center">
 
-        <h5 class="mb-0">Recent Tickets</h5>
+        <h5 class="mb-0">
+
+            <i class="bi bi-ticket-perforated"></i>
+
+            Recent Tickets
+
+        </h5>
 
         <a href="{% url 'ticket_list' %}" class="btn btn-primary btn-sm">
 
@@ -132,10 +320,14 @@
 
                 <tr>
 
-                    <th>Ticket ID</th>
+                    <th>ID</th>
+
                     <th>Title</th>
+
                     <th>Category</th>
+
                     <th>Priority</th>
+
                     <th>Status</th>
 
                 </tr>
@@ -160,7 +352,11 @@
 
                     <td>
 
-                        {{ ticket.title }}
+                        <a href="{% url 'ticket_detail' ticket.id %}">
+
+                            {{ ticket.title }}
+
+                        </a>
 
                     </td>
 
@@ -172,17 +368,29 @@
 
                     <td>
 
-                        {% if ticket.priority == 'High' %}
+                        {% if ticket.priority == "High" %}
 
-                            <span class="badge bg-danger">High</span>
+                            <span class="badge bg-danger">
 
-                        {% elif ticket.priority == 'Medium' %}
+                                High
 
-                            <span class="badge bg-warning text-dark">Medium</span>
+                            </span>
+
+                        {% elif ticket.priority == "Medium" %}
+
+                            <span class="badge bg-warning text-dark">
+
+                                Medium
+
+                            </span>
 
                         {% else %}
 
-                            <span class="badge bg-secondary">Low</span>
+                            <span class="badge bg-secondary">
+
+                                Low
+
+                            </span>
 
                         {% endif %}
 
@@ -190,17 +398,29 @@
 
                     <td>
 
-                        {% if ticket.status == 'Closed' %}
+                        {% if ticket.status == "Closed" %}
 
-                            <span class="badge bg-success">Closed</span>
+                            <span class="badge bg-success">
 
-                        {% elif ticket.status == 'In Progress' %}
+                                Closed
 
-                            <span class="badge bg-primary">In Progress</span>
+                            </span>
+
+                        {% elif ticket.status == "In Progress" %}
+
+                            <span class="badge bg-primary">
+
+                                In Progress
+
+                            </span>
 
                         {% else %}
 
-                            <span class="badge bg-warning text-dark">Open</span>
+                            <span class="badge bg-warning text-dark">
+
+                                Open
+
+                            </span>
 
                         {% endif %}
 

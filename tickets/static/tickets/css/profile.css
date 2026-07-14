@@ -1,0 +1,93 @@
+.profile-card {
+    border: none;
+    border-radius: 18px;
+}
+
+.profile-avatar {
+
+    width: 180px;
+    height: 180px;
+
+    margin: auto;
+
+    border-radius: 50%;
+
+    overflow: hidden;
+
+    border: 4px solid #0d6efd;
+
+    position: relative;
+
+    background: #eee;
+
+}
+
+.profile-avatar img {
+
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+
+    object-position: center;
+
+}
+
+.camera-btn {
+
+    position: absolute;
+
+    right: 10px;
+
+    bottom: 10px;
+
+    width: 42px;
+
+    height: 42px;
+
+    border-radius: 50%;
+
+    background: #0d6efd;
+
+    color: white;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    cursor: pointer;
+
+    border: 3px solid white;
+
+    font-size: 18px;
+
+    transition: .2s;
+
+}
+
+.camera-btn:hover {
+
+    transform: scale(1.08);
+
+}
+
+.info-card {
+
+    border-radius: 15px;
+
+    padding: 25px;
+}
+
+.save-btn {
+
+    border-radius: 30px;
+
+    padding: 10px 40px;
+}

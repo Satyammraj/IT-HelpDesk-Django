@@ -1,87 +1,98 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% block title %}Settings{% endblock %}
 
 {% block content %}
 
-<h2 class="fw-bold mb-4">
-    Settings
-</h2>
+<div class="container">
 
-<div class="card shadow-sm">
+    <div class="card shadow">
 
-    <div class="card-body">
+        <div class="card-header bg-primary text-white">
 
-        <h5 class="mb-4">
-            Application Settings
-        </h5>
+            <h3 class="mb-0">
 
-        <div class="mb-4">
+                <i class="bi bi-gear-fill"></i>
 
-            <label class="form-label fw-bold">
-                Theme
-            </label>
+                Settings
 
-            <select class="form-select" disabled>
-
-                <option selected>Light Mode</option>
-                <option>Dark Mode</option>
-
-            </select>
-
-            <small class="text-muted">
-                Coming Soon
-            </small>
+            </h3>
 
         </div>
 
-        <div class="mb-4">
+        <div class="card-body">
 
-            <label class="form-label fw-bold">
-                Notifications
-            </label>
+            <form method="post">
 
-            <div class="form-check">
+                {% csrf_token %}
 
-                <input class="form-check-input"
-                       type="checkbox"
-                       checked
-                       disabled>
+                <h5 class="mb-3">Appearance</h5>
 
-                <label class="form-check-label">
+                <div class="form-check">
 
-                    Email Notifications
+                    <input
+                        class="form-check-input"
+                        type="radio"
+                        name="theme"
+                        value="light"
+                        {% if profile.theme == "light" %}checked{% endif %}>
 
-                </label>
+                    <label class="form-check-label">
 
-            </div>
+                        ☀️ Light Mode
 
-            <small class="text-muted">
-                Coming Soon
-            </small>
+                    </label>
+
+                </div>
+
+                <div class="form-check mb-4">
+
+                    <input
+                        class="form-check-input"
+                        type="radio"
+                        name="theme"
+                        value="dark"
+                        {% if profile.theme == "dark" %}checked{% endif %}>
+
+                    <label class="form-check-label">
+
+                        🌙 Dark Mode
+
+                    </label>
+
+                </div>
+
+                <hr>
+
+                <h5 class="mb-3">Notifications</h5>
+
+                <div class="form-check mb-4">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="email_notifications"
+                        {% if profile.email_notifications %}checked{% endif %}>
+
+                    <label class="form-check-label">
+
+                        Receive Email Notifications
+
+                    </label>
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary">
+
+                    Save Settings
+
+                </button>
+
+            </form>
 
         </div>
-
-        <div class="mb-4">
-
-            <label class="form-label fw-bold">
-
-                Connected Account
-
-            </label>
-
-            <input
-                class="form-control"
-                value="{{ request.user.email }}"
-                readonly>
-
-        </div>
-
-        <button class="btn btn-primary" disabled>
-
-            Save Changes
-
-        </button>
 
     </div>
 

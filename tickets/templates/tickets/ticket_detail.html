@@ -13,11 +13,11 @@
         </h3>
 
         {% if ticket.priority == "High" %}
-            <span class="badge bg-danger">High Priority</span>
+        <span class="badge bg-danger">High Priority</span>
         {% elif ticket.priority == "Medium" %}
-            <span class="badge bg-warning text-dark">Medium Priority</span>
+        <span class="badge bg-warning text-dark">Medium Priority</span>
         {% else %}
-            <span class="badge bg-secondary">Low Priority</span>
+        <span class="badge bg-secondary">Low Priority</span>
         {% endif %}
 
     </div>
@@ -54,21 +54,15 @@
 
                     {% if request.user.is_staff %}
 
-                    <form method="post"
-                          action="{% url 'update_status' ticket.id %}"
-                          class="d-flex">
+                    <form method="post" action="{% url 'update_status' ticket.id %}" class="d-flex">
 
                         {% csrf_token %}
 
-                        <select
-                            name="status"
-                            class="form-select me-2">
+                        <select name="status" class="form-select me-2">
 
                             {% for value,label in ticket.STATUS_CHOICES %}
 
-                            <option
-                                value="{{ value }}"
-                                {% if ticket.status == value %}selected{% endif %}>
+                            <option value="{{ value }}" {% if ticket.status == value %}selected{% endif %}>
 
                                 {{ label }}
 
@@ -79,24 +73,26 @@
                         </select>
 
                         <button class="btn btn-primary">
+
                             Update
+
                         </button>
 
                     </form>
 
                     {% else %}
 
-                        {% if ticket.status == "Closed" %}
-                            <span class="badge bg-success">{{ ticket.status }}</span>
-                        {% elif ticket.status == "In Progress" %}
-                            <span class="badge bg-primary">{{ ticket.status }}</span>
-                        {% elif ticket.status == "On Hold" %}
-                            <span class="badge bg-warning text-dark">{{ ticket.status }}</span>
-                        {% elif ticket.status == "Resolved" %}
-                            <span class="badge bg-info">{{ ticket.status }}</span>
-                        {% else %}
-                            <span class="badge bg-secondary">{{ ticket.status }}</span>
-                        {% endif %}
+                    {% if ticket.status == "Closed" %}
+                    <span class="badge bg-success">{{ ticket.status }}</span>
+                    {% elif ticket.status == "In Progress" %}
+                    <span class="badge bg-primary">{{ ticket.status }}</span>
+                    {% elif ticket.status == "On Hold" %}
+                    <span class="badge bg-warning text-dark">{{ ticket.status }}</span>
+                    {% elif ticket.status == "Resolved" %}
+                    <span class="badge bg-info">{{ ticket.status }}</span>
+                    {% else %}
+                    <span class="badge bg-secondary">{{ ticket.status }}</span>
+                    {% endif %}
 
                     {% endif %}
 
@@ -132,19 +128,19 @@
 
                     {% if ticket.attachment %}
 
-                        <a href="{{ ticket.attachment.url }}"
-                           target="_blank"
-                           class="btn btn-outline-primary btn-sm">
+                    <a href="{{ ticket.attachment.url }}" target="_blank" class="btn btn-outline-primary btn-sm">
 
-                            📎 Download Attachment
+                        📎 Download Attachment
 
-                        </a>
+                    </a>
 
                     {% else %}
 
-                        <span class="text-muted">
-                            No attachment uploaded.
-                        </span>
+                    <span class="text-muted">
+
+                        No attachment uploaded.
+
+                    </span>
 
                     {% endif %}
 
@@ -157,7 +153,9 @@
         <hr>
 
         <h4 class="mb-3">
-            Activity
+
+            Replies
+
         </h4>
 
         {% for comment in ticket.comments.all %}
@@ -169,17 +167,23 @@
                 <div class="d-flex justify-content-between">
 
                     <strong>
+
                         {{ comment.user.username }}
+
                     </strong>
 
                     <small class="text-muted">
-                        {{ comment.created }}
+
+                        {{ comment.created|date:"d M Y H:i" }}
+
                     </small>
 
                 </div>
 
                 <p class="mt-3 mb-0">
+
                     {{ comment.message }}
+
                 </p>
 
             </div>
@@ -189,14 +193,20 @@
         {% empty %}
 
         <div class="alert alert-light">
+
             No replies yet.
+
         </div>
 
         {% endfor %}
 
         <hr>
 
-        <h5>Add Reply</h5>
+        <h5>
+
+            Add Reply
+
+        </h5>
 
         <form method="post">
 
@@ -205,45 +215,76 @@
             {{ form.as_p }}
 
             <button class="btn btn-primary">
+
                 Reply
+
             </button>
 
         </form>
 
         <hr>
 
-        <div class="d-flex gap-2">
+        <h4 class="mb-3">
 
-            <a href="{% url 'edit_ticket' ticket.id %}"
-               class="btn btn-primary">
+            Ticket Timeline
 
-                Edit Ticket
+        </h4>
 
-            </a>
+        {% for item in history %}
 
-            {% if not request.user.is_staff and ticket.status != "Closed" %}
+        <div class="card mb-3">
 
-            <a href="{% url 'close_ticket' ticket.id %}"
-               class="btn btn-success">
+            <div class="card-body">
 
-                Close Ticket
+                <div class="d-flex justify-content-between">
 
-            </a>
+                    <strong>
 
-            {% endif %}
+                        {{ item.action }}
 
-            {% if request.user.is_staff %}
+                    </strong>
 
-            <a href="{% url 'delete_ticket' ticket.id %}"
-               class="btn btn-danger">
+                    <small class="text-muted">
 
-                Delete Ticket
+                        {{ item.created|date:"d M Y H:i" }}
 
-            </a>
+                    </small>
 
-            {% endif %}
+                </div>
+
+                <div class="mt-2">
+
+                    <span class="text-primary">
+
+                        {{ item.user.username }}
+
+                    </span>
+
+                </div>
+
+                {% if item.details %}
+
+                <div class="mt-2">
+
+                    {{ item.details }}
+
+                </div>
+
+                {% endif %}
+
+            </div>
 
         </div>
+
+        {% empty %}
+
+        <div class="alert alert-light">
+
+            No activity recorded yet.
+
+        </div>
+
+        {% endfor %}
 
     </div>
 

@@ -1,55 +1,222 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
-{% block title %}My Profile{% endblock %}
+{% block title %}
+My Profile
+{% endblock %}
 
 {% block content %}
+
+<style>
+    /* ================= PROFILE PAGE — Panel theme ================= */
+
+    .profile-avatar {
+        position: relative;
+        width: 128px;
+        height: 128px;
+    }
+
+    .profile-avatar#profile-avatar-panel img,
+    .profile-avatar img {
+        width: 100% !important;
+        height: 100% !important;
+        max-width: none !important;
+        object-fit: cover !important;
+        object-position: center !important;
+        border-radius: 50% !important;
+        border: 3px solid var(--card) !important;
+        outline: 2px solid var(--border) !important;
+        display: block !important;
+    }
+
+    .profile-avatar .camera-btn {
+        position: absolute !important;
+        bottom: -4px !important;
+        top: auto !important;
+        right: auto !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: 34px;
+        height: 34px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--indigo);
+        color: #fff;
+        border-radius: 50%;
+        border: 2px solid var(--card);
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: background 0.15s ease;
+    }
+
+    .profile-avatar .camera-btn:hover {
+        background: var(--indigo-hover);
+    }
+
+    .profile-avatar input[type="file"] {
+        display: none;
+    }
+
+    .profile-username {
+        color: var(--ink-faint);
+        font-weight: 500;
+    }
+
+    .profile-section-title {
+        font-family: 'Manrope', sans-serif;
+        font-weight: 700;
+        font-size: 0.95rem;
+        color: var(--ink);
+        margin-bottom: 1rem;
+    }
+
+    .profile-meta p {
+        font-size: 0.9rem;
+        color: var(--ink-soft);
+        margin-bottom: 0.5rem;
+    }
+
+    .profile-meta strong {
+        color: var(--ink);
+        font-weight: 700;
+    }
+
+    .profile-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.6rem;
+        flex-wrap: wrap;
+    }
+</style>
 
 <div class="container">
 
     <div class="row justify-content-center">
 
-        <div class="col-md-8">
+        <div class="col-lg-8">
 
-            <div class="card shadow">
+            <div class="card">
 
-                <div class="card-body text-center">
+                <div class="card-header">
+                    <h3>
+                        <i class="bi bi-person-circle me-2"></i>
+                        My Profile
+                    </h3>
+                </div>
 
-                    <img src="https://ui-avatars.com/api/?name={{ request.user.username }}&background=0D6EFD&color=fff&size=150"
-                         class="rounded-circle mb-3">
+                <div class="card-body">
 
-                    <h3>{{ request.user.username }}</h3>
+                    <form method="post" enctype="multipart/form-data">
 
-                    <p class="text-muted">{{ request.user.email }}</p>
+                        {% csrf_token %}
 
-                    <hr>
+                        <div class="text-center mb-5">
 
-                    <div class="row">
+                            <div class="profile-avatar mx-auto">
 
-                        <div class="col-md-4">
+                                <label for="profile-upload" style="cursor:pointer; display:block;">
 
-                            <h4>{{ request.user.ticket_set.count }}</h4>
+                                    {% if request.user.profile.profile_picture %}
+                                    <img src="{{ request.user.profile.profile_picture.url }}" id="preview-image"
+                                        alt="Profile Picture">
+                                    {% else %}
+                                    <img src="https://ui-avatars.com/api/?name={{ request.user.username }}&background=2563EB&color=fff&size=300"
+                                        id="preview-image" alt="Profile Picture">
+                                    {% endif %}
 
-                            <small>Tickets Created</small>
+                                    <span class="camera-btn">
+                                        <i class="bi bi-camera-fill"></i>
+                                    </span>
+                                </label>
+
+                                {{ profile_form.profile_picture.as_widget }}
+
+                            </div>
+
+                            <h4 class="mt-4 mb-1">
+                                {{ request.user.get_full_name|default:request.user.username }}
+                            </h4>
+
+                            <p class="profile-username mb-0">
+                                @{{ request.user.username }}
+                            </p>
 
                         </div>
 
-                        <div class="col-md-4">
+                        <h5 class="profile-section-title">
+                            Account Information
+                        </h5>
 
-                            <h4>{{ request.user.date_joined|date:"d M Y" }}</h4>
+                        <div class="row">
 
-                            <small>Joined</small>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">First Name</label>
+                                {{ user_form.first_name }}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Last Name</label>
+                                {{ user_form.last_name }}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Username</label>
+                                {{ user_form.username }}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Email</label>
+                                {{ user_form.email }}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Phone</label>
+                                {{ profile_form.phone }}
+                            </div>
+
+                            <div class="col-12 mb-3">
+                                <label class="form-label">Bio</label>
+                                {{ profile_form.bio }}
+                            </div>
 
                         </div>
 
-                        <div class="col-md-4">
+                        <hr>
 
-                            <h4>{{ request.user.last_login|date:"d M Y" }}</h4>
+                        <div class="row align-items-center">
 
-                            <small>Last Login</small>
+                            <div class="col-md-6 profile-meta">
+
+                                <p>
+                                    <strong>Role:</strong>
+                                    {% if request.user.is_staff %}
+                                    <span class="badge bg-danger">Administrator</span>
+                                    {% else %}
+                                    <span class="badge bg-secondary">User</span>
+                                    {% endif %}
+                                </p>
+
+                                <p>
+                                    <strong>Joined:</strong>
+                                    {{ request.user.date_joined|date:"d M Y" }}
+                                </p>
+
+                            </div>
+
+                            <div class="col-md-6 text-end profile-actions">
+                                <a href="{% url 'change_password' %}" class="btn btn-outline-secondary">
+                                    <i class="bi bi-key-fill me-1"></i>
+                                    Change Password
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-save me-1"></i>
+                                    Save Changes
+                                </button>
+                            </div>
 
                         </div>
 
-                    </div>
+                    </form>
 
                 </div>
 
@@ -60,5 +227,18 @@
     </div>
 
 </div>
+
+<script>
+    document
+        .getElementById("profile-upload")
+        .addEventListener("change", function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                document
+                    .getElementById("preview-image")
+                    .src = URL.createObjectURL(file);
+            }
+        });
+</script>
 
 {% endblock %}
