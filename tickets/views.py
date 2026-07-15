@@ -166,8 +166,8 @@ def create_ticket(request):
                         recipient_list=admin_emails,
                         fail_silently=False,
                     )
-               except Exception as e:
-                   print(e)
+               except Exception:
+                   traceback.print_exc()
                    
             messages.success(request, f'Ticket "{ticket.title}" created successfully.')
 
