@@ -12,6 +12,8 @@ from django.utils import timezone
 from .forms import CommentForm, TicketForm
 from .models import Ticket, TicketHistory
 from django.core.paginator import Paginator
+import traceback
+
 
 # =====================================
 # Dashboard
@@ -164,8 +166,9 @@ def create_ticket(request):
                         recipient_list=admin_emails,
                         fail_silently=False,
                     )
-               except Exception as e:
-                    print(f"Email error: {e}")
+               except Exception:
+                   traceback.print_exc()
+                   
             messages.success(request, f'Ticket "{ticket.title}" created successfully.')
 
             return redirect("dashboard")
