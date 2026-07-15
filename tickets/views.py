@@ -4,7 +4,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .email_utils import send_email as send_mail
+from .email_utils import send_brevo_email
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
@@ -279,7 +279,7 @@ def ticket_detail(request, ticket_id):
                 and ticket.created_by.email
             ):
 
-                send_mail(
+                send_brevo_email(
                     subject=f"New Reply: {ticket.title}",
                     message=(
                         f"Hello {ticket.created_by.username},\n\n"
@@ -353,7 +353,7 @@ def close_ticket(request, ticket_id):
     )
 
     if ticket.created_by.email and ticket.created_by.profile.email_notifications:
-        send_mail(
+        send_brevo_email(
             subject=f"Ticket Closed: {ticket.title}",
             message=(
                 f"Hello {ticket.created_by.username},\n\n"
@@ -410,7 +410,7 @@ def update_status(request, ticket_id):
 
         if ticket.created_by.email and ticket.created_by.profile.email_notifications:
 
-            send_mail(
+            send_brevo_email(
                 subject=f"Ticket Status Updated: {ticket.title}",
                 message=(
                     f"Hello {ticket.created_by.username},\n\n"

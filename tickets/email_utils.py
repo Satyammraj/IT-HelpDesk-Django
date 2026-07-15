@@ -2,7 +2,7 @@ import os
 import requests
 
 
-def send_email(subject, message, from_email=None, recipient_list=None, fail_silently=False):
+def send_brevo_email(subject, message, from_email=None, recipient_list=None, fail_silently=False):
     headers = {
         "accept": "application/json",
         "api-key": os.environ.get("BREVO_API_KEY"),
