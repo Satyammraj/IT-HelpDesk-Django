@@ -142,28 +142,28 @@ def create_ticket(request):
             )
 
             # Notify all admins
-            admin_emails = list(
-                User.objects.filter(is_staff=True)
-                .exclude(email="")
-                .values_list("email", flat=True)
-            )
+            # admin_emails = list(
+            #     User.objects.filter(is_staff=True)
+            #     .exclude(email="")
+            #     .values_list("email", flat=True)
+            # )
 
-            if admin_emails:
+            # if admin_emails:
 
-                send_mail(
-                    subject=f"New Ticket: {ticket.title}",
-                    message=(
-                        f"A new support ticket has been created.\n\n"
-                        f"Title: {ticket.title}\n"
-                        f"Category: {ticket.category}\n"
-                        f"Priority: {ticket.priority}\n"
-                        f"Created By: {request.user.username}\n\n"
-                        f"Please log in to the IT Help Desk to review it."
-                    ),
-                    from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=admin_emails,
-                    fail_silently=True,
-                )
+            #     send_mail(
+            #         subject=f"New Ticket: {ticket.title}",
+            #         message=(
+            #             f"A new support ticket has been created.\n\n"
+            #             f"Title: {ticket.title}\n"
+            #             f"Category: {ticket.category}\n"
+            #             f"Priority: {ticket.priority}\n"
+            #             f"Created By: {request.user.username}\n\n"
+            #             f"Please log in to the IT Help Desk to review it."
+            #         ),
+            #         from_email=settings.DEFAULT_FROM_EMAIL,
+            #         recipient_list=admin_emails,
+            #         fail_silently=True,
+            #     )
 
             messages.success(request, f'Ticket "{ticket.title}" created successfully.')
 
