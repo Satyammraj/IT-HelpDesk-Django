@@ -152,12 +152,6 @@ def create_ticket(request):
 
             if admin_emails:
                 try:
-                    print(admin_emails)
-                    print(settings.EMAIL_HOST)
-                    print(settings.EMAIL_PORT)
-                    print(settings.EMAIL_HOST_USER)
-                    print(settings.EMAIL_USE_TLS)
-                    print(settings.EMAIL_USE_SSL)
                     send_brevo_email(
                         subject=f"New Ticket: {ticket.title}",
                         message=(

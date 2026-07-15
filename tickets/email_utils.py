@@ -2,9 +2,7 @@ import os
 import requests
 
 
-def send_email(subject, message, recipients):
-    url = "https://api.brevo.com/v3/smtp/email"
-
+def send_email(subject, message, from_email=None, recipient_list=None, fail_silently=False):
     headers = {
         "accept": "application/json",
         "api-key": os.environ.get("BREVO_API_KEY"),
@@ -14,12 +12,23 @@ def send_email(subject, message, recipients):
     payload = {
         "sender": {
             "name": "IT Help Desk",
-            "email": "samd89544@gmail.com",   # Verified sender in Brevo
+            "email": "samd89544@gmail.com",
         },
-        "to": [{"email": email} for email in recipients],
+        "to": [{"email": email} for email in recipient_list],
         "subject": subject,
         "textContent": message,
     }
 
-    response = requests.post(url, headers=headers, json=payload)
-    response.raise_for_status()
+    try:
+        response = requests.post(
+            "https://api.brevo.com/v3/smtp/email",
+            headers=headers,
+            json=payload,
+            timeout=10,
+        )
+        response.raise_for_status()
+        return 1
+    except Exception:
+        if not fail_silently:
+            raise
+        return 0
