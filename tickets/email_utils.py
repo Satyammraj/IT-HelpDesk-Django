@@ -26,6 +26,8 @@ def send_brevo_email(subject, message, from_email=None, recipient_list=None, fai
             json=payload,
             timeout=10,
         )
+        print(response.status_code)
+        print(response.text)
         response.raise_for_status()
         return 1
     except Exception:
