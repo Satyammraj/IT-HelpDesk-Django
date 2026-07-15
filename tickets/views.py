@@ -1,5 +1,5 @@
 from datetime import date
-
+from django.http import HttpResponse
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -465,3 +465,14 @@ def delete_ticket(request, ticket_id):
     messages.success(request, f'Ticket "{ticket_title}" deleted successfully.')
 
     return redirect("ticket_list")
+
+#test
+def test_email(request):
+    result = send_mail(
+        "Brevo Test",
+        "Hello from Django!",
+        settings.DEFAULT_FROM_EMAIL,
+        ["samd89544@gmail.com"],
+        fail_silently=False,
+    )
+    return HttpResponse(f"Sent: {result}")
