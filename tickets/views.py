@@ -13,7 +13,7 @@ from .forms import CommentForm, TicketForm
 from .models import Ticket, TicketHistory
 from django.core.paginator import Paginator
 import traceback
-from .email_utils import send_brevo_email
+
 
 # =====================================
 # Dashboard
