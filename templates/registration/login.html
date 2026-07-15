@@ -58,7 +58,10 @@
         body.bg-light {
             background: var(--paper) !important;
             min-height: 100vh;
+            overflow-x: hidden;
         }
+
+        img { max-width: 100%; height: auto; }
 
         .card.shadow-lg {
             background: var(--card);
@@ -91,7 +94,7 @@
             margin-bottom: 0.75rem;
         }
 
-        h2.text-center p.text-muted {
+        .login-subtitle {
             font-family: 'Inter', sans-serif;
             font-weight: 400;
             font-size: 0.85rem;
@@ -226,9 +229,24 @@
             border-color: var(--indigo);
         }
 
+        /* ================= RESPONSIVE TWEAKS ================= */
+        /* Everything below only applies on small screens — desktop is untouched. */
+
         @media (max-width: 576px) {
             .card-body.p-5 {
                 padding: 2rem 1.5rem !important;
+            }
+
+            /* Give the card breathing room from the screen edges instead
+               of touching the sides on narrow phones. */
+            .login-row {
+                padding-left: 0.5rem;
+                padding-right: 0.5rem;
+            }
+
+            /* 16px stops iOS Safari from auto-zooming into the field on focus */
+            .form-control {
+                font-size: 16px;
             }
         }
     </style>
@@ -239,7 +257,7 @@
 
     <div class="container">
 
-        <div class="row justify-content-center align-items-center vh-100">
+        <div class="row justify-content-center align-items-center min-vh-100 login-row py-4">
 
             <div class="col-md-5">
 
@@ -251,13 +269,13 @@
                             <i class="bi bi-headset display-3 text-primary"></i>
 
                             IT Help Desk
-                            <p class="text-muted">
-
-                                Manage support requests efficiently.
-
-                            </p>
 
                         </h2>
+                        <p class="text-center login-subtitle">
+
+                            Manage support requests efficiently.
+
+                        </p>
 
                         <p class="text-center text-muted mb-4">
 
@@ -265,7 +283,6 @@
 
                         </p>
 
-                        <!----> Google Login <---->
 
                             {% load socialaccount %}
 

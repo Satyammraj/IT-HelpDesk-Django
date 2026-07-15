@@ -64,11 +64,19 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
+        html {
+            /* Prevent iOS auto-zoom on inputs & keep layout stable */
+            -webkit-text-size-adjust: 100%;
+        }
+
         body {
             background-color: var(--paper);
             color: var(--ink);
             min-height: 100vh;
+            overflow-x: hidden; /* stop stray wide elements causing horizontal scroll */
         }
+
+        img { max-width: 100%; height: auto; }
 
         /* ================= NAVBAR ================= */
 
@@ -102,6 +110,7 @@
             color: #fff;
             font-size: 1rem;
             font-style: normal;
+            flex-shrink: 0;
         }
 
         .navbar .fw-bold.text-white {
@@ -145,27 +154,49 @@
             border: 2px solid var(--card);
             outline: 2px solid var(--border);
             transition: outline-color 0.18s ease;
+            flex-shrink: 0;
         }
 
         .navbar img.rounded-circle:hover {
             outline-color: var(--indigo);
         }
 
+        /* Hamburger button that toggles the sidebar on small screens.
+           Bootstrap's own .navbar-toggler assumes a dark navbar; we're
+           on a light one, so restyle it to match the ink/indigo palette. */
+        .sidebar-toggler {
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 0.4rem 0.6rem;
+            background: var(--card);
+            line-height: 1;
+        }
+
+        .sidebar-toggler:focus {
+            box-shadow: 0 0 0 3px var(--indigo-soft);
+        }
+
+        .sidebar-toggler .bi {
+            font-size: 1.1rem;
+            color: var(--ink-soft);
+        }
+
         /* ================= SIDEBAR ================= */
 
-        .col-md-2.bg-dark {
+        .sidebar-panel {
             background: var(--sidebar-bg) !important;
             border-right: 1px solid var(--border);
             box-shadow: none;
             padding-top: 1.25rem !important;
+            min-height: 100vh;
         }
 
-        .col-md-2.bg-dark hr {
+        .sidebar-panel hr {
             border-color: var(--border);
             margin: 1rem 0 1.15rem;
         }
 
-        .col-md-2 .nav-link {
+        .sidebar-panel .nav-link {
             display: flex;
             align-items: center;
             border-radius: var(--radius-md);
@@ -177,39 +208,53 @@
             transition: all 0.15s ease;
         }
 
-        .col-md-2 .nav-link i {
+        .sidebar-panel .nav-link i {
             color: var(--ink-faint);
             width: 20px;
             transition: color 0.15s ease;
         }
 
-        .col-md-2 .nav-link:hover {
+        .sidebar-panel .nav-link:hover {
             background: var(--indigo-soft);
             color: var(--indigo) !important;
         }
 
-        .col-md-2 .nav-link:hover i {
+        .sidebar-panel .nav-link:hover i {
             color: var(--indigo);
         }
 
-        .col-md-2 .nav-link.text-danger {
+        .sidebar-panel .nav-link.text-danger {
             color: var(--danger) !important;
             margin-top: 0.6rem;
         }
 
-        .col-md-2 .nav-link.text-danger i {
+        .sidebar-panel .nav-link.text-danger i {
             color: var(--danger);
         }
 
-        .col-md-2 .nav-link.text-danger:hover {
+        .sidebar-panel .nav-link.text-danger:hover {
             background: var(--danger-bg);
             color: var(--danger) !important;
         }
 
+        /* Below md: the sidebar becomes a collapsible dropdown panel
+           instead of a full-height column sitting above the content. */
+        @media (max-width: 767.98px) {
+            .sidebar-panel {
+                min-height: auto;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                border-radius: var(--radius-lg);
+                margin: 0 0 1rem 0;
+                padding: 1rem !important;
+            }
+        }
+
         /* ================= MAIN / CONTENT ================= */
 
-        .col-md-10.p-4 {
+        .main-content {
             padding: 2rem 2.25rem !important;
+            min-width: 0; /* allow flex/grid children to shrink instead of overflowing */
         }
 
         h1, h2, h3, h4 {
@@ -320,7 +365,14 @@
         .text-secondary { color: var(--ink-faint) !important; }
 
         /* Icon-only action buttons in a .btn-group read cleaner as
-           separated rounded buttons rather than a fused pill strip. */
+           separated rounded buttons rather than a fused pill strip.
+           flex-wrap keeps them from overflowing the card on narrow
+           screens instead of forcing horizontal scroll. */
+        .btn-group {
+            flex-wrap: wrap;
+            row-gap: 6px;
+        }
+
         .btn-group .btn {
             border-radius: var(--radius-sm) !important;
             margin-right: 4px;
@@ -331,6 +383,11 @@
         }
 
         /* Pagination */
+        .pagination {
+            flex-wrap: wrap;
+            row-gap: 6px;
+        }
+
         .pagination .page-link {
             color: var(--ink-soft);
             border: 1px solid var(--border);
@@ -404,6 +461,19 @@
             vertical-align: middle;
         }
 
+        /* Any table not already wrapped in .table-responsive still gets
+           horizontal scroll instead of squashing/overflowing on phones. */
+        .table {
+            display: block;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .table-responsive .table {
+            display: table;
+            white-space: normal;
+        }
+
         /* Stat numbers inside dashboard cards */
         .card h1, .card h2 {
             font-size: 1.9rem;
@@ -416,6 +486,8 @@
             text-transform: uppercase;
             color: var(--ink-faint) !important;
         }
+
+        /* Bootstrap's .bg-primary utility (card headers, progress bars, etc.)
            should use the same royal blue as buttons/links, not
            Bootstrap's default blue. */
         .bg-primary {
@@ -534,7 +606,8 @@
             padding: 0.6rem 0.85rem;
             background: var(--paper);
             color: var(--ink);
-            font-size: 0.9rem;
+            /* 16px stops iOS Safari auto-zooming into the field on focus */
+            font-size: 16px;
         }
 
         form input:focus,
@@ -605,8 +678,28 @@
             color: var(--ink-faint);
         }
 
-        @media (max-width: 768px) {
-            .col-md-10.p-4 { padding: 1.25rem !important; }
+        /* ================= RESPONSIVE TWEAKS ================= */
+
+        @media (max-width: 767.98px) {
+            .main-content { padding: 1.25rem !important; }
+
+            .navbar-brand { font-size: 1.05rem; }
+            .navbar-brand i { width: 30px; height: 30px; }
+
+            /* Keep the navbar from wrapping into a jumbled second line */
+            .navbar > .container-fluid {
+                flex-wrap: nowrap;
+            }
+
+            .card-body { padding: 1.25rem 1.1rem; }
+            .card-header { padding: 0.9rem 1.1rem; }
+        }
+
+        @media (max-width: 575.98px) {
+            /* Below phone width, drop the "Welcome back, name + badge"
+               block entirely — keep just the avatar so the navbar
+               never crowds or wraps. */
+            .navbar-welcome { display: none; }
         }
     </style>
 </head>
@@ -626,11 +719,18 @@
                 IT Help Desk
             </a>
 
+            <!-- Hamburger: only shown below md, toggles the sidebar -->
+            <button class="navbar-toggler sidebar-toggler d-md-none" type="button"
+                data-bs-toggle="collapse" data-bs-target="#sidebarMenu"
+                aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle menu">
+                <i class="bi bi-list"></i>
+            </button>
+
             <!-- Right -->
 
-            <div class="ms-auto d-flex align-items-center">
+            <div class="ms-auto d-flex align-items-center flex-shrink-0">
 
-                <div class="text-end me-3">
+                <div class="text-end me-3 navbar-welcome">
 
                     <div class="fw-bold text-white">
 
@@ -707,37 +807,37 @@
 
         <div class="row">
 
-            <!-- Sidebar -->
+            <!-- Sidebar: collapsed by default below md, always visible at md+ -->
 
-            <div class="col-md-2 bg-dark text-white min-vh-100 p-3 shadow">
+            <div class="collapse d-md-block col-md-2 sidebar-panel" id="sidebarMenu">
 
 
-                <hr>
+                <hr class="d-none d-md-block">
 
-                <a href="{% url 'dashboard' %}" class="nav-link text-white mb-3">
+                <a href="{% url 'dashboard' %}" class="nav-link mb-3">
                     <i class="bi bi-speedometer2 me-2"></i>
                     Dashboard
                 </a>
 
-                <a href="{% url 'ticket_list' %}" class="nav-link text-white mb-3">
+                <a href="{% url 'ticket_list' %}" class="nav-link mb-3">
                     <i class="bi bi-ticket-perforated me-2"></i>
                     Tickets
                 </a>
 
-                <a href="{% url 'create_ticket' %}" class="nav-link text-white mb-3">
+                <a href="{% url 'create_ticket' %}" class="nav-link mb-3">
                     <i class="bi bi-plus-circle me-2"></i>
                     Create Ticket
                 </a>
 
                 {% if request.user.is_staff %}
 
-                <a href="{% url 'users_list' %}" class="nav-link text-white mb-3">
+                <a href="{% url 'users_list' %}" class="nav-link mb-3">
                     <i class="bi bi-people me-2"></i>
                     Users
                 </a>
 
                 {% endif %}
-                <a href="{% url 'settings' %}" class="nav-link text-white mb-3">
+                <a href="{% url 'settings' %}" class="nav-link mb-3">
                     <i class="bi bi-gear me-2"></i>
                     Settings
                 </a>
@@ -751,7 +851,7 @@
 
             <!-- Main -->
 
-            <div class="col-md-10 p-4">
+            <div class="col-md-10 main-content">
                 {% if messages %}
 
                 {% for message in messages %}
