@@ -152,6 +152,7 @@ def create_ticket(request):
 
             if admin_emails:
                try:
+                   print(admin_emails)
                    send_mail(
                         subject=f"New Ticket: {ticket.title}",
                         message=(
