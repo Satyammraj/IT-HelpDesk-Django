@@ -161,7 +161,7 @@ def create_ticket(request):
                             f"Priority: {ticket.priority}\n"
                             f"Created By: {request.user.username}"
                         ),
-                        recipients=admin_emails,
+                        recipient_list=admin_emails,
                     )
                 except Exception:
                     traceback.print_exc()
