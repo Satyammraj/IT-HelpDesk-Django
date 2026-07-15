@@ -4,7 +4,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.core.mail import send_mail
+from .email_utils import send_email as send_mail
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
@@ -13,7 +13,7 @@ from .forms import CommentForm, TicketForm
 from .models import Ticket, TicketHistory
 from django.core.paginator import Paginator
 import traceback
-
+from .email_utils import send_brevo_email
 
 # =====================================
 # Dashboard
@@ -151,30 +151,27 @@ def create_ticket(request):
             )
 
             if admin_emails:
-               try:
-                   print(admin_emails)
-                   print(settings.EMAIL_HOST)
-                   print(settings.EMAIL_PORT)
-                   print(settings.EMAIL_HOST_USER)
-                   print(settings.EMAIL_USE_TLS)
-                   print(settings.EMAIL_USE_SSL)
-                   send_mail(
+                try:
+                    print(admin_emails)
+                    print(settings.EMAIL_HOST)
+                    print(settings.EMAIL_PORT)
+                    print(settings.EMAIL_HOST_USER)
+                    print(settings.EMAIL_USE_TLS)
+                    print(settings.EMAIL_USE_SSL)
+                    send_brevo_email(
                         subject=f"New Ticket: {ticket.title}",
                         message=(
-                           f"A new support ticket has been created.\n\n"
-                           f"Title: {ticket.title}\n"
-                           f"Category: {ticket.category}\n"
-                           f"Priority: {ticket.priority}\n"
-                           f"Created By: {request.user.username}\n\n"
-                           f"Please log in to the IT Help Desk to review it."
+                            f"A new support ticket has been created.\n\n"
+                            f"Title: {ticket.title}\n"
+                            f"Category: {ticket.category}\n"
+                            f"Priority: {ticket.priority}\n"
+                            f"Created By: {request.user.username}"
                         ),
-                        from_email=settings.DEFAULT_FROM_EMAIL,
-                        recipient_list=admin_emails,
-                        fail_silently=False,
+                        recipients=admin_emails,
                     )
-               except Exception:
-                   traceback.print_exc()
-                   
+                except Exception:
+                    traceback.print_exc()
+
             messages.success(request, f'Ticket "{ticket.title}" created successfully.')
 
             return redirect("dashboard")
@@ -417,7 +414,7 @@ def update_status(request, ticket_id):
             details=f"{old_status} → {new_status}",
         )
 
-        if (ticket.created_by.email and ticket.created_by.profile.email_notifications):
+        if ticket.created_by.email and ticket.created_by.profile.email_notifications:
 
             send_mail(
                 subject=f"Ticket Status Updated: {ticket.title}",
@@ -466,13 +463,5 @@ def delete_ticket(request, ticket_id):
 
     return redirect("ticket_list")
 
-#test
-def test_email(request):
-    result = send_mail(
-        "Brevo Test",
-        "Hello from Django!",
-        settings.DEFAULT_FROM_EMAIL,
-        ["samd89544@gmail.com"],
-        fail_silently=False,
-    )
-    return HttpResponse(f"Sent: {result}")
+
+
